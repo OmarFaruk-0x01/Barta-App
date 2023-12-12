@@ -23,9 +23,19 @@ class ProfileController extends Controller
             abort(404);
         }
         $posts = PostService::getIndividualPosts($user->id,
-            with: ['author'], withCount: ['comments']);
+            with: [
+                'author',
+                'author.media' => function ($query) {
+                    $query->where('collection_name', 'avatar');
+                },
+                'media' => function ($query) {
+                    $query->where('collection_name', 'posts');
+                }],
+            withCount: ['comments']);
 
-        return view('profile.show', compact('user', 'isOwnProfile', 'posts'));
+        $isOwnProfile = auth()->user()?->username == $user->username;
+
+        return view('profile.show', compact('user', 'posts', 'isOwnProfile'));
     }
 
     /**
@@ -33,9 +43,7 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        return view('profile.edit');
     }
 
     /**
@@ -44,6 +52,10 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
+        if ($request->hasFile('avatar')) {
+            $request->user()->getFirstMedia('avatar')?->delete();
+            $request->user()->addMedia($request->file('avatar'))->toMediaCollection('avatar');
+        }
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;

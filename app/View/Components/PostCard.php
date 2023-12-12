@@ -2,6 +2,8 @@
 
 namespace App\View\Components;
 
+use App\Models\Post;
+use App\Models\User;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -12,12 +14,8 @@ class PostCard extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public string $authorName,
-        public string $authorUsername,
-        public string $postUUID,
-        public string $postContent,
-        public int $postViews,
-        public string $postCreatedAt,
+        public Post $post,
+        public User $author,
         public ?bool $clickable = false,
         public ?bool $editable = false,
     ) {

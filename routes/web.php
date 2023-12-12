@@ -21,7 +21,7 @@ Route::get('/', [FeedController::class, 'index'])->name('feed');
 
 Route::prefix('/profile')
     ->group(function () {
-        Route::get('/{username}', [ProfileController::class, 'show'])->middleware(['auth', 'verified'])->name('profile');
+        Route::get('/{username}', [ProfileController::class, 'show'])->name('profile');
 
         Route::middleware(['auth'])->group(function () {
             Route::get('', [ProfileController::class, 'edit'])->name('profile.edit');

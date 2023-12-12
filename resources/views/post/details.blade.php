@@ -1,8 +1,7 @@
 <x-app-layout>
     <main class="container max-w-xl mx-auto space-y-8 mt-8 px-2 md:px-0 min-h-screen">
         <section id="newsfeed" class="space-y-6">
-            <x-post-card :authorName="$post->author->name" :authorUsername="$post->author->username" :postUUID="$post->uuid" :postContent="$post->content" :postViews="$post->views"
-                :postCreatedAt="$post->created_at">
+            <x-post-card :post="$post">
                 <x-slot name="postFooter">
                     <form action="{{ route('comment.create', ['uuid' => $post->uuid]) }}" method="POST">
                         @csrf

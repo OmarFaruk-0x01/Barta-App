@@ -1,6 +1,5 @@
 @foreach ($posts as $post)
-    <x-post-card :authorName="$post->author->name" :authorUsername="$post->author->username" :postUUID="$post->uuid" :postContent="$post->content" :postViews="$post->views"
-        :postCreatedAt="$post->created_at" clickable>
+    <x-post-card :post="$post" clickable>
         <x-slot name="postFooter">
             <div class="flex items-center justify-between">
                 <div class="flex gap-8 text-gray-600">

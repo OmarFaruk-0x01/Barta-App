@@ -28,6 +28,10 @@
                     <!--                >-->
                     <!--              </div>-->
                 </div>
+                <!-- Search input -->
+                <form action="" method="POST" class="flex items-center">
+                    <x-auto-complete />
+                </form>
                 <div class="hidden sm:ml-6 sm:flex gap-2 sm:items-center">
                     <!-- This Button Should Be Hidden on Mobile Devices -->
                     <!--              <button-->

@@ -15,7 +15,8 @@ class PostController extends Controller
     public function store(PostCreateRequest $request)
     {
         $content = $request->validated('content');
-        PostService::createPost($content, $request->user()->id);
+
+        PostService::createPost($content, $request->user()->id, $request->file('picture'));
 
         return back();
     }
@@ -25,10 +26,17 @@ class PostController extends Controller
      */
     public function show(string $uuid)
     {
-        $post = PostService::getPost($uuid, with: ['author']);
-        if (!$post) {
-            return abort(404);
-        }
+        $post = PostService::getPost($uuid,
+            with: [
+                'author',
+                'author.media' => function ($query) {
+                    $query->where('collection_name', 'avatar');
+                },
+                'media' => function ($query) {
+                    $query->where('collection_name', 'posts');
+                },
+            ]);
+
         $comments = CommentService::getComments($post->id, with: ['user']);
         return view('post.details', compact('post', 'comments'));
     }

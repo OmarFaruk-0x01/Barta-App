@@ -28,17 +28,25 @@ class PostService
 
     public static function getPost(string $postUUID,
         ?array $fields = ['*', 'posts.id'],
-        ?array $with = []): ?Post {
-        return Post::with($with)->where('uuid', $postUUID)->select($fields)->first();
+        ?array $with = []): Post {
+        $post = Post::with($with)->where('uuid', $postUUID)->select($fields)->first();
+        if (!$post) {
+            return abort(404);
+        }
+        return $post;
     }
 
-    public static function createPost(string $content, string $userId)
+    public static function createPost(string $content, string $userId, mixed $file)
     {
-        return Post::create([
+        $post = Post::create([
             'content' => $content,
             'user_id' => $userId,
             'uuid' => str()->uuid()->toString(),
         ]);
+        if ($file) {
+            $post->addMedia($file)->toMediaCollection('posts');
+        }
+        return $post;
     }
 
     public static function updatePost(string $content, string $postUUID): bool
